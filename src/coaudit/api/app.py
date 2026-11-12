@@ -1,6 +1,7 @@
 from typing import Optional
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -29,6 +30,12 @@ def error_response(status_code: int, message: str) -> JSONResponse:
 
 def create_app(service: AuditService) -> FastAPI:
     app = FastAPI(title="Co Audit backend")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @app.exception_handler(RunNotFoundError)
     def run_not_found(request: Request, error: RunNotFoundError) -> JSONResponse:
