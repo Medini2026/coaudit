@@ -33,6 +33,7 @@ class CheckName(str, Enum):
     NET_INCOME_TIE_OUT = "net_income_tie_out"
     GROSS_PROFIT_IDENTITY = "gross_profit_identity"
     OPERATING_INCOME_IDENTITY = "operating_income_identity"
+    SECOND_READING = "second_reading"
 
 
 class CheckStatus(str, Enum):

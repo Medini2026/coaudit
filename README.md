@@ -71,5 +71,5 @@ Someone who opens the database file with outside tools and removes the triggers 
 
 - Extraction is rule-based and tuned on 8 companies. Unusual statement wording may need a new rule.
 - Values we derive ourselves (for example Walmart's gross profit) are always flagged for a human look.
-- An LLM second reading is not built yet.
+- The LLM second reading is optional. Set `LLM_API_KEY` (and `LLM_PROVIDER` as gemini, openai or anthropic, and optionally `LLM_MODEL`) in `.env`. The model reads the three statement tables and names the row and number for each metric. A number that is not in the table is rejected. If it differs from the rules, the value is flagged for a human. With no key the system runs without it. Try it with `python -m coaudit.llm AAPL --offline`.
 - All code was written during the 24-hour event. Libraries used: pydantic, httpx, beautifulsoup4, lxml, python-dotenv, pytest, langgraph, fastapi, uvicorn (all open source).

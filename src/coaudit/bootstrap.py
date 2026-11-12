@@ -2,6 +2,7 @@ from typing import Optional
 
 from coaudit.contracts import FilingBundle
 from coaudit.groundtruth.xbrl import load_ground_truth
+from coaudit.llm.client import client_from_environment
 from coaudit.sec.client import SecClient
 from coaudit.sec.filings import fetch_filing
 from coaudit.service import AuditService
@@ -20,4 +21,6 @@ def build_default_service(offline: Optional[bool] = None) -> AuditService:
     def load_truth(bundle: FilingBundle):
         return load_ground_truth(client, bundle)
 
-    return AuditService(DATABASE_PATH, CHECKPOINT_PATH, load_filing, load_truth)
+    return AuditService(
+        DATABASE_PATH, CHECKPOINT_PATH, load_filing, load_truth, llm=client_from_environment()
+    )

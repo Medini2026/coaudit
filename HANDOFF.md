@@ -82,4 +82,4 @@ Apple, Microsoft, Nvidia, Walmart, Tesla and Costco, plus Amazon and Coca-Cola. 
 
 - The extraction is rule-based. It matches the wording of the statement rows, so an unusual company may need a new rule.
 - Values we derive ourselves (such as Walmart's gross profit and total liabilities) are always flagged for a human look, and carry `extractor = derived`.
-- The LLM second reading and the grounding check are not built yet.
+- The LLM second reading and its grounding check are built (`src/coaudit/llm`) and covered by tests with a simulated model service. They run only when `LLM_API_KEY` is set in `.env`. Accuracy with a real model has to be checked with `python -m coaudit.llm TICKER --offline`.

@@ -18,6 +18,7 @@ from coaudit.extraction.fault import apply_fault
 from coaudit.extraction.rules import extract_metrics_by_rules
 from coaudit.groundtruth.compare import compare_to_ground_truth
 from coaudit.groundtruth.xbrl import GroundTruthValue
+from coaudit.llm.reading import second_reading
 from coaudit.parsing.tables import load_tables
 from coaudit.scoring.confidence import route, score_confidence
 from coaudit.store.database import Store
@@ -46,6 +47,7 @@ class Dependencies:
     load_filing: Callable[[str], FilingBundle]
     load_truth: Callable[[FilingBundle], dict[MetricName, GroundTruthValue]]
     store: Store
+    llm: Optional[Any] = None
 
 
 def dump_all(models: list[Any]) -> list[dict[str, Any]]:
@@ -86,7 +88,13 @@ def build_graph(dependencies: Dependencies, checkpointer):
         bundle = FilingBundle.model_validate(state["bundle"])
         config = Config.model_validate(state["config"])
         metrics = [ExtractedMetric.model_validate(item) for item in state["metrics"]]
-        validations = run_validations(metrics, load_tables(bundle), config)
+        tables = load_tables(bundle)
+        extras: list[ExtractedMetric] = []
+        second: list[ValidationResult] = []
+        if dependencies.llm is not None:
+            extras, second = second_reading(bundle, tables, metrics, dependencies.llm)
+        metrics = metrics + extras
+        validations = run_validations(metrics, tables, config) + second
         scored = score_confidence(metrics, validations, config)
         decisions = route(scored, validations, config)
         return {

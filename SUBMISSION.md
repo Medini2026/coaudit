@@ -55,7 +55,7 @@ All code was written during the 24-hour event. No third-party datasets other tha
 
 - Extraction is rule-based and tuned on 8 companies. A company with unusual statement wording may need a new rule.
 - Values we derive ourselves (for example Walmart's gross profit) are always flagged for a human look.
-- An LLM second reading of each figure is not built.
+- The LLM second reading is optional and needs an API key in `.env`. Without a key the system runs on rules and checks only. The model is never trusted blindly: every number it returns must exist in the statement table, or it is rejected. Its agreement or disagreement with the rules is one more check, and a disagreement sends the value to a human. It was tested with a simulated model service in the automated tests. Results from a real model depend on the key and the model used.
 - The audit log is append-only for our application and database connections. Someone with direct access to the database file could still remove the protective rules.
 - The error-injection numbers use synthetic mistakes and are not real extraction accuracy.
 

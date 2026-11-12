@@ -57,6 +57,7 @@ class AuditService:
         checkpoint_path,
         load_filing: Callable[[str], FilingBundle],
         load_truth: Callable[[FilingBundle], dict[MetricName, GroundTruthValue]],
+        llm: Optional[Any] = None,
     ) -> None:
         self.store = Store(database_path)
         Path(checkpoint_path).parent.mkdir(parents=True, exist_ok=True)
@@ -64,7 +65,9 @@ class AuditService:
             str(checkpoint_path), check_same_thread=False
         )
         self.graph = build_graph(
-            Dependencies(load_filing=load_filing, load_truth=load_truth, store=self.store),
+            Dependencies(
+                load_filing=load_filing, load_truth=load_truth, store=self.store, llm=llm
+            ),
             SqliteSaver(self._checkpoint_connection),
         )
         self._graph_lock = threading.RLock()
