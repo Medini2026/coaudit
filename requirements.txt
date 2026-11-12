@@ -1,0 +1,10 @@
+pydantic
+httpx
+beautifulsoup4
+lxml
+python-dotenv
+pytest
+langgraph
+langgraph-checkpoint-sqlite
+fastapi
+uvicorn
